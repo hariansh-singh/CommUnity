@@ -1,8 +1,8 @@
-import { Add as AddIcon } from "@mui/icons-material";
+import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
 import { Avatar, IconButton, ListItem, Stack, Typography } from "@mui/material";
 import React, { memo } from "react";
 
-function UserItem({ user, handler, handlerIsLoading }) {
+function UserItem({ user, handler, handlerIsLoading, isAdded = false }) {
   const { name, _id, avatar } = user;
 
   return (
@@ -15,32 +15,34 @@ function UserItem({ user, handler, handlerIsLoading }) {
       >
         <Avatar />
 
-        <Typography 
-            variant="body1"
-            sx={{
-                flexGlow: 1,
-                display: "-webkit-box",
-                WebkitLineClamp: 1,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                width: "100%",
-            }}
-            
-            >{name}</Typography>
+        <Typography
+          variant="body1"
+          sx={{
+            flexGlow: 1,
+            display: "-webkit-box",
+            WebkitLineClamp: 1,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            width: "100%",
+          }}
+        >
+          {name}
+        </Typography>
 
-        <IconButton 
-            size="small"
-            sx={{
-                bgcolor: "primary.main",
-                color: "white",
-                "&hover": {
-                    bgcolor: "primary.dark",
-                }
-            }}
-            
-            onClick={() => handler(_id)} disabled={handlerIsLoading}>
-          <AddIcon />
+        <IconButton
+          size="small"
+          sx={{
+            bgcolor: isAdded ? "error.main" : "primary.main",
+            color: "white",
+            "&:hover": {
+              bgcolor: isAdded ? "error.main" : "primary.dark",
+            },
+          }}
+          onClick={() => handler(_id)}
+          disabled={handlerIsLoading}
+        >
+          {isAdded ? <RemoveIcon /> : <AddIcon />}
         </IconButton>
       </Stack>
     </ListItem>

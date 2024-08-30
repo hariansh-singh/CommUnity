@@ -1,6 +1,6 @@
+import { Box, Stack, Typography } from "@mui/material";
 import React, { memo } from "react";
 import { Link } from "../styles/StyledComponents";
-import { Box, Stack, Typography } from "@mui/material";
 import AvatarCard from "./AvatarCard";
 
 function ChatItem({
@@ -17,7 +17,7 @@ function ChatItem({
   return (
     <Link
       sx={{
-        padding: "0"
+        padding: "0",
       }}
       to={`/chat/${_id}`}
       onContextMenu={(e) => handleDeleteChat(e, _id, groupChat)}
@@ -33,8 +33,7 @@ function ChatItem({
           position: "relative",
         }}
       >
-        
-          <AvatarCard avatar={avatar} />
+        <AvatarCard avatar={avatar} />
 
         <Stack>
           <Typography>{name}</Typography>
