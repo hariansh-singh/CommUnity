@@ -38,7 +38,7 @@ function Profile() {
 
       <ProfileCard
         heading={"Joined"}
-        text={moment('2023-11-04T18:30:00.000Z').fromNow()}
+        text={moment('2024-11-04T18:30:00.000Z').fromNow()}
         Icon={<CalendarIcon />}
       />
     </Stack>

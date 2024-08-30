@@ -1,7 +1,6 @@
 import { Stack } from "@mui/material";
 import React from "react";
 import ChatItem from "../shared/ChatItem";
-import { Chat } from "@mui/icons-material";
 
 function ChatList({
   w = "100%",
