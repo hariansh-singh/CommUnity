@@ -1,24 +1,21 @@
-import React from "react";
-import Header from "./Header";
-import Title from "../shared/Title";
 import Grid from "@mui/material/Grid";
-import ChatList from "../specific/ChatList";
-import { sampleChats } from "../../constants/sampleData";
+import React from "react";
 import { useParams } from "react-router-dom";
+import { sampleChats } from "../../constants/sampleData";
+import Title from "../shared/Title";
+import ChatList from "../specific/ChatList";
 import Profile from "../specific/Profile";
+import Header from "./Header";
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
-
-    const params = useParams()
-    const chatId = params.chatId
-
+    const params = useParams();
+    const chatId = params.chatId;
 
     const handleDeleteChat = (e, _id, groupChat) => {
-      e.preventDefault()
-      console.log("Delete Chat", _id, groupChat);  
-    }
-
+      e.preventDefault();
+      console.log("Delete Chat", _id, groupChat);
+    };
 
     return (
       <>
@@ -29,7 +26,7 @@ const AppLayout = () => (WrappedComponent) => {
           <Grid
             item
             sm={4}
-            mid={3}
+            md={3}
             sx={{
               display: { xs: "none", sm: "block" },
             }}
@@ -42,14 +39,7 @@ const AppLayout = () => (WrappedComponent) => {
             />
           </Grid>
 
-          <Grid
-            item
-            xs={12}
-            sm={8}
-            md={5}
-            // lg={6}
-            height={"100%"}
-          >
+          <Grid item xs={12} sm={8} md={5} lg={6} height={"100%"}>
             <WrappedComponent {...props} />
           </Grid>
 
@@ -67,8 +57,6 @@ const AppLayout = () => (WrappedComponent) => {
             <Profile />
           </Grid>
         </Grid>
-
-        <WrappedComponent {...props} />
       </>
     );
   };

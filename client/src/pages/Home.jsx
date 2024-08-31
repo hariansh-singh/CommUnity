@@ -1,10 +1,11 @@
 import React from "react";
 import AppLayout from "../components/layout/AppLayout";
 import { Box, Typography } from "@mui/material";
+import { grayColor } from "../constants/color";
 
 function Home() {
   return (
-    <Box bgcolor={"rgba(0,0,0,0.1)"} height={"100%"}>
+    <Box bgcolor={grayColor} height={"100%"}>
       <Typography p={"2rem"} variant="h5" textAlign={"center"}>
         Select a user to chat
       </Typography>
