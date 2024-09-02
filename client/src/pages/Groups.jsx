@@ -303,7 +303,7 @@ function Groups() {
 const GroupsList = ({ w = "100%", myGroups = [], chatId }) => {
   return (
     <Stack width={w} sx={{
-      bgcolor: "bisque",
+      bgcolor: "#3C3C3C",
       height: "100vh",
       overflow: "auto",
     }}>
@@ -334,7 +334,7 @@ const GroupListItem = memo(({ group, chatId }) => {
     >
       <Stack direction={"row"} spacing={"1rem"} alignItems={"center"}>
         <AvatarCard avatar={avatar} />
-        <Typography>{name}</Typography>
+        <Typography color={"white"}>{name}</Typography>
       </Stack>
     </Link>
   );

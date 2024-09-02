@@ -18,6 +18,7 @@ import {
   Notifications as NotificationsIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import logo from "../../assets/logo.png";
 
 const SearchDialog = lazy(() => import("../specific/Search"));
 const NotificationsDialog = lazy(() => import("../specific/Notifications"));
@@ -58,12 +59,18 @@ function Header() {
       <Box sx={{ flexGrow: 1 }} height={"4rem"}>
         <AppBar position="static" sx={{ bgcolor: "#2F2F2F" }}>
           <Toolbar>
-            <Typography
-              variant="h6"
-              sx={{ display: { xs: "none", sm: "block" } }}
-            >
-              CommUnity
-            </Typography>
+            <Box
+              position={"absolute"}
+              component="img"
+              src={logo} 
+              alt="CommUnity Logo"
+              marginTop={"1rem"}
+              marginLeft={"3rem"}
+              sx={{
+                height: "200px", // Adjust as needed
+                display: { xs: "none", sm: "block" },
+              }}
+            />
 
             <Box sx={{ display: { xs: "block", sm: "none" } }}>
               <IconButton color="inherit" onClick={handleMobile}>
