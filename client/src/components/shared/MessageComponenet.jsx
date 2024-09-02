@@ -16,7 +16,7 @@ const MessageComponenet = ({ message, user }) => {
     <div
       style={{
         alignSelf: samesender ? "flex-end" : "flex-start",
-        backgroundColor: "white",
+        backgroundColor: samesender ? "#E3F9D7" : "black",
         color: "black",
         borderRadius: "5px",
         padding: "0.5rem",
@@ -29,31 +29,40 @@ const MessageComponenet = ({ message, user }) => {
         </Typography>
       )}
 
-      {content && <Typography>{content}</Typography>}
+      {content && (
+        <Typography
+          style={{
+            color: "white",
+          }}
+        >
+          {content}
+        </Typography>
+      )}
 
-      {attachments.length > 0 && attachments.map((i, index) => {
-        const url = i.url;
-        const file = fileFormat(url);
+      {attachments.length > 0 &&
+        attachments.map((i, index) => {
+          const url = i.url;
+          const file = fileFormat(url);
 
-        return (
+          return (
             <Box key={index}>
-                <a 
-                    href={url}
-                    target= "_blank"
-                    download
-                    style={{
-                        color: "black",
-                    }}
-                >
-
-                    {RenderAttachments(file, url)}  
-
-                </a>
+              <a
+                href={url}
+                target="_blank"
+                download
+                style={{
+                  color: "black",
+                }}
+              >
+                {RenderAttachments(file, url)}
+              </a>
             </Box>
-        )
-      })}
+          );
+        })}
 
-      <Typography variant="caption" color={"text.secondary"}>
+      <Typography style={{
+        color: "#B0BEC5",
+      }} variant="caption" color={"text.secondary"}>
         {timeAgo}
       </Typography>
     </div>

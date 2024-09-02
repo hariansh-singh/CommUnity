@@ -5,7 +5,14 @@ import { grayColor } from "../constants/color";
 
 function Home() {
   return (
-    <Box bgcolor={grayColor} height={"100%"}>
+    <Box 
+    bgcolor={grayColor}
+    height={"100%"}
+    display="flex"
+    flexDirection="column"
+    justifyContent="center"
+    alignItems="center"
+    >
       <Typography p={"2rem"} variant="h5" textAlign={"center"}>
         Select a user to chat
       </Typography>

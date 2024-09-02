@@ -28,14 +28,15 @@ function ChatItem({
           gap: "1rem",
           alignItems: "center",
           padding: "1rem",
-          backgroundColor: sameSender ? "black" : "unset",
-          color: sameSender ? "white" : "unset",
+          backgroundColor: sameSender ? "rgba(255, 255, 255, 0.2)" : "unset",
+          // color: sameSender ? "white" : "unset",
           position: "relative",
+          
         }}
       >
         <AvatarCard avatar={avatar} />
 
-        <Stack>
+        <Stack color={"white"}>
           <Typography>{name}</Typography>
           {newMessageAlert && (
             <Typography>{newMessageAlert.count} New Message</Typography>

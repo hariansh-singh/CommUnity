@@ -29,6 +29,8 @@ const AppLayout = () => (WrappedComponent) => {
             md={3}
             sx={{
               display: { xs: "none", sm: "block" },
+              padding: 1,
+              bgcolor: "#3C3C3C", // Subtle gradient background
             }}
             height={"100%"}
           >
@@ -39,19 +41,30 @@ const AppLayout = () => (WrappedComponent) => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={8} md={5} lg={6} height={"100%"}>
+          <Grid
+            item
+            xs={12}
+            sm={8}
+            md={6}
+            lg={7}
+            height={"100%"}
+            sx={{
+              borderLeft: "1px solid rgba(0, 0, 0, 0.9)", // Thin left border
+            }}
+          >
             <WrappedComponent {...props} />
           </Grid>
 
           <Grid
             item
-            md={4}
-            lg={3}
+            md={3}
+            lg={2}
             height={"100%"}
             sx={{
               display: { xs: "none", md: "block" },
               padding: 2,
               bgcolor: "rgba(0, 0, 0, 0.85)",
+              borderLeft: "1px solid rgba(0, 0, 0, 0.12)", // Thin left border
             }}
           >
             <Profile />
