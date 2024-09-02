@@ -3,13 +3,14 @@ import {
   Send as SendIcon,
 } from "@mui/icons-material";
 import { IconButton, Stack } from "@mui/material";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import FileMenu from "../components/dialogs/FileMenu";
 import AppLayout from "../components/layout/AppLayout";
+import MessageComponenet from "../components/shared/MessageComponenet";
 import { InputBox } from "../components/styles/StyledComponents";
 import { grayColor, orange } from "../constants/color";
-import FileMenu from "../components/dialogs/FileMenu";
 import { sampleMessage } from "../constants/sampleData";
-import MessageComponenet from "../components/shared/MessageComponenet";
 
 const user = {
   _id: "rgerfibg",
@@ -18,6 +19,22 @@ const user = {
 
 function Chat() {
   const containerRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    function handleEscKey(event) {
+      if (event.key === "Escape") {
+        navigate("/");
+      }
+    }
+
+    document.addEventListener("keydown", handleEscKey);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscKey);
+    };
+  }, [navigate]);
 
   return (
     <>

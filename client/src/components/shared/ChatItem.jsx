@@ -28,7 +28,7 @@ function ChatItem({
           gap: "1rem",
           alignItems: "center",
           padding: "1rem",
-          backgroundColor: sameSender ? "rgba(255, 255, 255, 0.2)" : "unset",
+          backgroundColor: sameSender ? "rgba(255, 255, 255, 0.1)" : "unset",
           // color: sameSender ? "white" : "unset",
           position: "relative",
           

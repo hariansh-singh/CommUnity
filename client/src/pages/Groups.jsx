@@ -195,7 +195,7 @@ function Groups() {
   return (
     <>
       <Header />
-      <Grid container sx={{ height: "calc(100vh - 4rem)"}}>
+      <Grid container sx={{ height: "calc(100vh - 4rem)" }}>
         <Grid
           item
           sx={{
@@ -204,7 +204,7 @@ function Groups() {
               sm: "block",
             },
             height: "100%",
-            overflow: "hidden"
+            overflow: "hidden",
           }}
           sm={4}
           bgcolor={"bisque"}
@@ -222,7 +222,8 @@ function Groups() {
             alignItems: "center",
             position: "relative",
             padding: "1rem 3rem",
-            overflow: "auto"
+            overflow: "auto",
+            bgcolor: "#e5e5e5",
           }}
         >
           {IconBtns}
@@ -233,7 +234,8 @@ function Groups() {
 
               <Typography
                 margin={"2rem"}
-                alignSelf={"flex-start"}
+                marginRight={"5rem"}
+                alignSelf={"center"}
                 variant="body1"
               >
                 Members
@@ -249,7 +251,7 @@ function Groups() {
                   md: "1rem 4rem",
                 }}
                 spacing={"2rem"}
-                height={"50vh"}
+                height={"100%"}
                 overflow={"auto"}
               >
                 {/* Members */}

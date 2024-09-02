@@ -54,12 +54,17 @@ function Header() {
     console.log("Logout");
   };
 
+  const handleHeader = () => {
+    navigate("/");
+  }
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }} height={"4rem"}>
         <AppBar position="static" sx={{ bgcolor: "#2F2F2F" }}>
           <Toolbar>
             <Box
+              onClick={handleHeader}
               position={"absolute"}
               component="img"
               src={logo} 
