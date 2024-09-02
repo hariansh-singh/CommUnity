@@ -65,7 +65,7 @@ function Header() {
               src={logo} 
               alt="CommUnity Logo"
               marginTop={"1rem"}
-              marginLeft={"3rem"}
+              marginLeft={"-2rem"}
               sx={{
                 height: "200px", // Adjust as needed
                 display: { xs: "none", sm: "block" },

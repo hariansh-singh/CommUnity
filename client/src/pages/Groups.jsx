@@ -24,6 +24,7 @@ import AvatarCard from "../components/shared/AvatarCard";
 import UserItem from "../components/shared/UserItem";
 import { Link } from "../components/styles/StyledComponents";
 import { sampleChats, sampleUsers } from "../constants/sampleData";
+import Header from "../components/layout/Header";
 
 const ConfirmDeleteDialog = lazy(() =>
   import("../components/dialogs/ConfirmDeleteDialog")
@@ -192,121 +193,130 @@ function Groups() {
   );
 
   return (
-    <Grid container height={"100vh"}>
-      <Grid
-        item
-        sx={{
-          display: {
-            xs: "none",
-            sm: "block",
-          },
-        }}
-        sm={4}
-        bgcolor={"bisque"}
-      >
-        <GroupsList myGroups={sampleChats} chatId={chatId} />
-      </Grid>
+    <>
+      <Header />
+      <Grid container sx={{ height: "calc(100vh - 4rem)"}}>
+        <Grid
+          item
+          sx={{
+            display: {
+              xs: "none",
+              sm: "block",
+            },
+            height: "100%",
+            overflow: "hidden"
+          }}
+          sm={4}
+          bgcolor={"bisque"}
+        >
+          <GroupsList myGroups={sampleChats} chatId={chatId} />
+        </Grid>
 
-      <Grid
-        item
-        xs={12}
-        sm={8}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          position: "relative",
-          padding: "1rem 3rem",
-        }}
-      >
-        {IconBtns}
+        <Grid
+          item
+          xs={12}
+          sm={8}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            position: "relative",
+            padding: "1rem 3rem",
+            overflow: "auto"
+          }}
+        >
+          {IconBtns}
 
-        {groupName && (
-          <>
-            {GroupName}
+          {groupName && (
+            <>
+              {GroupName}
 
-            <Typography
-              margin={"2rem"}
-              alignSelf={"flex-start"}
-              variant="body1"
-            >
-              Members
-            </Typography>
+              <Typography
+                margin={"2rem"}
+                alignSelf={"flex-start"}
+                variant="body1"
+              >
+                Members
+              </Typography>
 
-            <Stack
-              maxWidth={"45rem"}
-              width={"100%"}
-              boxSizing={"border-box"}
-              padding={{
-                sm: "1rem",
-                xs: "0",
-                md: "1rem 4rem",
-              }}
-              spacing={"2rem"}
-              height={"50vh"}
-              overflow={"auto"}
-            >
-              {/* Members */}
+              <Stack
+                maxWidth={"45rem"}
+                width={"100%"}
+                boxSizing={"border-box"}
+                padding={{
+                  sm: "1rem",
+                  xs: "0",
+                  md: "1rem 4rem",
+                }}
+                spacing={"2rem"}
+                height={"50vh"}
+                overflow={"auto"}
+              >
+                {/* Members */}
 
-              {sampleUsers.map((i) => (
-                <UserItem
-                  key={i._id}
-                  user={i}
-                  isAdded
-                  styling={{
-                    boxShadow: "0 0 0.5rem rgba(0,0,0,0.2)",
-                    padding: "1rem 2rem",
-                    borderRadius: "1rem",
-                  }}
-                  handler={removeMemberHandler}
-                />
-              ))}
-            </Stack>
+                {sampleUsers.map((i) => (
+                  <UserItem
+                    key={i._id}
+                    user={i}
+                    isAdded
+                    styling={{
+                      boxShadow: "0 0 0.5rem rgba(0,0,0,0.2)",
+                      padding: "1rem 2rem",
+                      borderRadius: "1rem",
+                    }}
+                    handler={removeMemberHandler}
+                  />
+                ))}
+              </Stack>
 
-            {ButtonGroup}
-          </>
+              {ButtonGroup}
+            </>
+          )}
+        </Grid>
+
+        {isAddMember && (
+          <Suspense fallback={<Backdrop open />}>
+            <AddMemberDialog />
+          </Suspense>
         )}
+
+        {confirmDeleteDialog && (
+          <Suspense fallback={<Backdrop open />}>
+            <ConfirmDeleteDialog
+              open={ConfirmDeleteDialog}
+              handleClose={closeConfirmDeleteHandler}
+              deleteHandler={deleteHandler}
+            />
+          </Suspense>
+        )}
+
+        <Drawer
+          sx={{
+            display: {
+              xs: "block",
+              sm: "none",
+            },
+          }}
+          open={isMobileMenuOpen}
+          onClose={handleMobileClose}
+        >
+          <GroupsList myGroups={sampleChats} chatId={chatId} w={"50vW"} />
+        </Drawer>
       </Grid>
-
-      {isAddMember && (
-        <Suspense fallback={<Backdrop open />}>
-          <AddMemberDialog />
-        </Suspense>
-      )}
-
-      {confirmDeleteDialog && (
-        <Suspense fallback={<Backdrop open />}>
-          <ConfirmDeleteDialog
-            open={ConfirmDeleteDialog}
-            handleClose={closeConfirmDeleteHandler}
-            deleteHandler={deleteHandler}
-          />
-        </Suspense>
-      )}
-
-      <Drawer
-        sx={{
-          display: {
-            xs: "block",
-            sm: "none",
-          },
-        }}
-        open={isMobileMenuOpen}
-        onClose={handleMobileClose}
-      >
-        <GroupsList myGroups={sampleChats} chatId={chatId} w={"50vW"} />
-      </Drawer>
-    </Grid>
+    </>
   );
 }
 
 const GroupsList = ({ w = "100%", myGroups = [], chatId }) => {
   return (
-    <Stack width={w} sx={{
-      bgcolor: "#3C3C3C",
-      height: "100vh",
-      overflow: "auto",
-    }}>
+    <Stack
+      width={w}
+      sx={{
+        bgcolor: "#3C3C3C",
+        height: "100vh",
+        overflow: "auto",
+      }}
+    >
       {myGroups.length > 0 ? (
         myGroups.map((group) => (
           <GroupListItem group={group} chatId={chatId} key={group._id} />
