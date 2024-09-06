@@ -8,4 +8,12 @@ const errorMiddleware = (err, req, res, next) => {
   });
 };
 
-export { errorMiddleware };
+const TryCatch = (passedfunc) => async (req, res, next) => {
+  try {
+    await passedfunc(req, res, next);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { errorMiddleware, TryCatch };
