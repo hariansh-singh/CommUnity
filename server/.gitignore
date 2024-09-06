@@ -17,6 +17,8 @@ Thumbs.db
 /env
 server/.env
 /.env
+env
+env/
 
 # IDE files
 .vscode/
