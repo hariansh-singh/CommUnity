@@ -1,10 +1,16 @@
-import { ALERT, REFETCH_CHATS } from "../constants/events.js";
+import {
+  ALERT,
+  NEW_ATTACHMENT,
+  NEW_MESSAGE_ALERT,
+  REFETCH_CHATS,
+} from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
 import { TryCatch } from "../middlewares/error.js";
 import { Chat } from "../models/Chat.js";
 import { User } from "../models/user.js";
 import { emitEvent } from "../utils/features.js";
 import { ErrorHandler } from "../utils/utility.js";
+import { Message } from "../models/message.js";
 
 // Create a new group chat
 const newGroupChat = TryCatch(async (req, res, next) => {
@@ -64,6 +70,89 @@ const getMyChats = TryCatch(async (req, res, next) => {
     success: true,
     chats: transformedChats,
   });
+});
+
+// Send attachments to a chat
+const sendAttachments = TryCatch(async (req, res, next) => {
+  const { chatId } = req.body;
+
+  const [chat, me] = await Promise.all([
+    Chat.findById(chatId),
+    User.findById(req.user),
+  ]);
+
+  if (!chat) return next(new ErrorHandler("Chat not found", 404));
+
+  const files = req.files || [];
+
+  if (files.length < 1)
+    return next(new ErrorHandler("Please attach files to send.", 400));
+
+  // Upload files here
+
+  const attachments = [];
+
+  const messageForRealTime = {
+    content: "",
+    attachments,
+    sender: {
+      _id: me._id,
+      name: me.name,
+    },
+    chat: chatId,
+  };
+
+  const messageForDB = {
+    content: "",
+    attachments,
+    sender: me._id,
+    chat: chatId,
+  };
+
+  const message = await Message.create(messageForDB);
+
+  emitEvent(req, NEW_ATTACHMENT, chat.members, {
+    message: messageForRealTime,
+    chatId,
+  });
+
+  emitEvent(req, NEW_MESSAGE_ALERT, chat.members, { chatId });
+
+  res.status(200).json({
+    success: true,
+    message,
+  });
+});
+
+// Get chat details
+const getChatDetails = TryCatch(async (req, res, next) => {
+  if (req.query.populate === "true") {
+    const chat = await Chat.findById(req.params.id)
+      .populate("members", "name avatar")
+      .lean();
+
+    if (!chat) return next(new ErrorHandler("Chat not found", 404));
+
+    chat.members = chat.members.map(({ name, avatar, _id }) => ({
+      name, 
+      avatar: avatar.url,
+      _id,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      chat,
+    });
+  } else {
+    const chat = await Chat.findById(req.params.id);
+
+    if (!chat) return next(new ErrorHandler("Chat not found", 404));
+
+    return res.status(200).json({
+      success: true,
+      chat,
+    });
+  }
 });
 
 // Get all the groups created by the logged in user
@@ -222,6 +311,8 @@ const leaveGroup = TryCatch(async (req, res, next) => {
 export {
   addmembers,
   getMyChats,
+  sendAttachments,
+  getChatDetails,
   getMyGroups,
   newGroupChat,
   removeMember,
