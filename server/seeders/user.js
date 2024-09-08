@@ -1,5 +1,5 @@
-import { User } from "../models/user.js";
 import { faker } from "@faker-js/faker";
+import { User } from "../models/user.js";
 
 const createUser = async (numUser) => {
   try {
@@ -23,14 +23,10 @@ const createUser = async (numUser) => {
 
     console.log("Users created", numUser);
     process.exit(1);
-
-
   } catch (error) {
     console.error(error);
     process.exit(1);
   }
 };
-
-createUser(10);
 
 export { createUser };
