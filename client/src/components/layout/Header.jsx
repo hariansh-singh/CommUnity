@@ -1,4 +1,11 @@
-import React, { lazy, Suspense, useState } from "react";
+import {
+  Add as AddIcon,
+  Group as GroupIcon,
+  Logout as LogoutIcon,
+  Menu as MenuIcon,
+  Notifications as NotificationsIcon,
+  Search as SearchIcon,
+} from "@mui/icons-material";
 import {
   AppBar,
   Backdrop,
@@ -6,17 +13,8 @@ import {
   IconButton,
   Toolbar,
   Tooltip,
-  Typography,
 } from "@mui/material";
-import { orange } from "../../constants/color";
-import {
-  Add as AddIcon,
-  Menu as MenuIcon,
-  Search as SearchIcon,
-  Group as GroupIcon,
-  Logout as LogoutIcon,
-  Notifications as NotificationsIcon,
-} from "@mui/icons-material";
+import React, { lazy, Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
@@ -56,7 +54,7 @@ function Header() {
 
   const handleHeader = () => {
     navigate("/");
-  }
+  };
 
   return (
     <>
@@ -67,7 +65,7 @@ function Header() {
               onClick={handleHeader}
               position={"absolute"}
               component="img"
-              src={logo} 
+              src={logo}
               alt="CommUnity Logo"
               marginTop={"1rem"}
               marginLeft={"-2rem"}
