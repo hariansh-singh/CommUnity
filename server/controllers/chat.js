@@ -6,11 +6,11 @@ import {
 } from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
 import { TryCatch } from "../middlewares/error.js";
-import { Chat } from "../models/Chat.js";
+import { Chat } from "../models/chat.js";
+import { Message } from "../models/message.js";
 import { User } from "../models/user.js";
 import { deleteFilesFromCloudinary, emitEvent } from "../utils/features.js";
 import { ErrorHandler } from "../utils/utility.js";
-import { Message } from "../models/message.js";
 
 // Create a new group chat
 const newGroupChat = TryCatch(async (req, res, next) => {
@@ -71,14 +71,22 @@ const getMyChats = TryCatch(async (req, res, next) => {
 const sendAttachments = TryCatch(async (req, res, next) => {
   const { chatId } = req.body;
 
+  const files = req.files || [];
+
+  if (files.length < 1)
+    return next(new ErrorHandler("Please attach files to send.", 400));
+
+  if (files.length > 5)
+    return next(
+      new ErrorHandler("You can't send more than 5 files at a time", 400)
+    );
+
   const [chat, me] = await Promise.all([
     Chat.findById(chatId),
     User.findById(req.user),
   ]);
 
   if (!chat) return next(new ErrorHandler("Chat not found", 404));
-
-  const files = req.files || [];
 
   if (files.length < 1)
     return next(new ErrorHandler("Please attach files to send.", 400));
@@ -412,14 +420,14 @@ const leaveGroup = TryCatch(async (req, res, next) => {
 
 export {
   addmembers,
-  getMyChats,
-  sendAttachments,
+  deleteChat,
   getChatDetails,
   getMessages,
-  renameGroup,
-  deleteChat,
+  getMyChats,
   getMyGroups,
+  leaveGroup,
   newGroupChat,
   removeMember,
-  leaveGroup,
+  renameGroup,
+  sendAttachments,
 };
