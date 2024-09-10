@@ -25,6 +25,7 @@ function App() {
 
   const dispatch = useDispatch();
 
+  // Check if user is logged in
   useEffect(() => {
     axios
       .get(`${server}/api/v1/user/me`, { withCredentials: true })
