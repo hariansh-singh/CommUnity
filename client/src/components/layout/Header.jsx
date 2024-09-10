@@ -19,9 +19,10 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userNotExists } from "../../redux/reducers/auth";
 import { server } from "../../constants/config";
+import { setIsMobileMenu, setIsSearch } from "../../redux/reducers/misc";
 
 const SearchDialog = lazy(() => import("../specific/Search"));
 const NotificationsDialog = lazy(() => import("../specific/Notifications"));
@@ -31,18 +32,14 @@ function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [isMobile, setIsMobile] = useState(false);
-  const [isSearch, setisSearch] = useState(false);
+  const { isSearch } = useSelector((state) => state.misc);
+
   const [isNewGroup, setisNewGroup] = useState(false);
   const [isNotification, setIsNotification] = useState(false);
 
-  const handleMobile = () => {
-    setIsMobile((prev) => !prev);
-  };
+  const handleMobile = () => dispatch(setIsMobileMenu(true));
 
-  const openSearch = () => {
-    setisSearch((prev) => !prev);
-  };
+  const openSearch = () => dispatch(setIsSearch(true));
 
   const openNewGroup = () => {
     setisNewGroup((prev) => !prev);

@@ -1,5 +1,5 @@
 import Grid from "@mui/material/Grid";
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { sampleChats } from "../../constants/sampleData";
 import Title from "../shared/Title";
@@ -7,25 +7,47 @@ import ChatList from "../specific/ChatList";
 import Profile from "../specific/Profile";
 import Header from "./Header";
 import { useMyChatsQuery } from "../../redux/api/api";
+import { Drawer, Skeleton } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsMobileMenu } from "../../redux/reducers/misc";
+import { useErrors } from "../../hooks/hook";
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
     const params = useParams();
     const chatId = params.chatId;
+    const dispatch = useDispatch();
+
+    const { isMobileMenu } = useSelector((state) => state.misc);
 
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery("");
 
-    console.log(data);
+    useErrors([{isError, error}])
 
     const handleDeleteChat = (e, _id, groupChat) => {
       e.preventDefault();
       console.log("Delete Chat", _id, groupChat);
     };
 
-    return (
+    const handleMobileClose = () => dispatch(setIsMobileMenu(false));
+
+    return (  
       <>
         <Title />
         <Header />
+
+        {isLoading ? (
+          <Skeleton />
+        ) : (
+          <Drawer open={isMobileMenu} onClose={handleMobileClose}>
+            <ChatList
+              w="70vw"
+              chats={data?.chats}
+              chatId={chatId}
+              handleDeleteChat={handleDeleteChat}
+            />
+          </Drawer>
+        )}
 
         <Grid container height={"calc(100vh - 4rem)"}>
           <Grid
@@ -39,11 +61,15 @@ const AppLayout = () => (WrappedComponent) => {
             }}
             height={"100%"}
           >
-            <ChatList
-              chats={sampleChats}
-              chatId={chatId}
-              handleDeleteChat={handleDeleteChat}
-            />
+            {isLoading ? (
+              <Skeleton />
+            ) : (
+              <ChatList
+                chats={data?.chats}
+                chatId={chatId}
+                handleDeleteChat={handleDeleteChat}
+              />
+            )}
           </Grid>
 
           <Grid
