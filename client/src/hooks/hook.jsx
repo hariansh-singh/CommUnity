@@ -32,7 +32,9 @@ const useAsyncMutation = (mutationHook) => {
 
         setData(res.data);
       } else {
-        toast.error(res?.error?.data?.message || "Something went wrong", { id: toastId });
+        toast.error(res?.error?.data?.message || "Something went wrong", {
+          id: toastId,
+        });
       }
     } catch (error) {
       toast.error("Something went wrong", { id: toastId });
@@ -44,4 +46,4 @@ const useAsyncMutation = (mutationHook) => {
   return [executeMutation, isLoading, data];
 };
 
-export { useErrors, useAsyncMutation };
+export { useAsyncMutation, useErrors };

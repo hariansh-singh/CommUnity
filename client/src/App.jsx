@@ -16,6 +16,7 @@ const Groups = lazy(() => import("./pages/Groups"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 // import Home from "./pages/Home";
 import Chat from "./pages/Chat";
+import { SocketProvider } from "./socket";
 // import Login from "./pages/Login";
 // import Groups from "./pages/Groups";
 // import NotFound from "./pages/NotFound";
@@ -39,7 +40,13 @@ function App() {
     <BrowserRouter>
       <Suspense fallback={<LayoutLoader />}>
         <Routes>
-          <Route element={<ProtectRoute user={user} />}>
+          <Route
+            element={
+              <SocketProvider>
+                <ProtectRoute user={user} />
+              </SocketProvider>
+            }
+          >
             <Route path="/" element={<Home />} />
             <Route path="/chat/:chatId" element={<Chat />} />
             <Route path="/groups" element={<Groups />} />

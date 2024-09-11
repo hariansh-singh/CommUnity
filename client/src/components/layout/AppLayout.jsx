@@ -11,6 +11,7 @@ import { Drawer, Skeleton } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsMobileMenu } from "../../redux/reducers/misc";
 import { useErrors } from "../../hooks/hook";
+import { GetSocket } from "../../socket";
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
@@ -18,7 +19,10 @@ const AppLayout = () => (WrappedComponent) => {
     const chatId = params.chatId;
     const dispatch = useDispatch();
 
+    const socket = GetSocket();
+
     const { isMobileMenu } = useSelector((state) => state.misc);
+    const { user } = useSelector((state) => state.auth);
 
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery("");
 
@@ -98,7 +102,7 @@ const AppLayout = () => (WrappedComponent) => {
               borderLeft: "1px solid rgba(0, 0, 0, 0.12)", // Thin left border
             }}
           >
-            <Profile />
+            <Profile user={user} />
           </Grid>
         </Grid>
       </>

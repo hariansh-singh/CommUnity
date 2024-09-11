@@ -17,8 +17,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { server } from "../constants/config";
-import { usernameValidator } from "../utils/validators";
 import { userExists } from "../redux/reducers/auth";
+import { usernameValidator } from "../utils/validators";
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
