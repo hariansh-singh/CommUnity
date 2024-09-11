@@ -7,28 +7,35 @@ import {
   List,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { sampleUsers } from "../../constants/sampleData";
+import { useAsyncMutation } from "../../hooks/hook";
+import {
+  useLazySearchUserQuery,
+  useSendFriendRequestMutation,
+} from "../../redux/api/api";
 import { setIsSearch } from "../../redux/reducers/misc";
 import UserItem from "../shared/UserItem";
-import { useLazySearchUserQuery } from "../../redux/api/api";
 
 function Search() {
   const { isSearch } = useSelector((state) => state.misc);
 
   const [searchUser] = useLazySearchUserQuery();
+  const [sendFriendRequest, isLoadingSendFriendRequest] = useAsyncMutation(
+    useSendFriendRequestMutation
+  );
 
   const dispatch = useDispatch();
 
   const search = useInputValidation("");
 
-  let isLoadingSendFriendRequest = false;
   const [users, setUsers] = useState([]);
 
-  const addFriendHandler = (id) => {
-    console.log(id);
+  const addFriendHandler = async (id) => {
+    await sendFriendRequest("Sending friend request...", { userId: id });
   };
 
   const searchCloseHandler = () => dispatch(setIsSearch(false));
@@ -87,14 +94,18 @@ function Search() {
             },
           }}
         >
-          {users.map((i) => (
-            <UserItem
-              user={i}
-              key={i._id}
-              handler={addFriendHandler}
-              handlerIsLoading={isLoadingSendFriendRequest}
-            />
-          ))}
+          {users.length > 0 ? (
+            users.map((i) => (
+              <UserItem
+                user={i}
+                key={i._id}
+                handler={addFriendHandler}
+                handlerIsLoading={isLoadingSendFriendRequest}
+              />
+            ))
+          ) : (
+            <Typography textAlign={"center"}>No Users found</Typography>
+          )}
         </List>
       </Stack>
     </Dialog>
