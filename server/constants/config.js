@@ -7,4 +7,6 @@ const corsOptions = {
   credentials: true,
 };
 
-export { corsOptions };
+const COMM_TOKEN = "CommUnity-token"
+
+export { corsOptions, COMM_TOKEN };

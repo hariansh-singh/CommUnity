@@ -32,7 +32,7 @@ const MessageComponenet = ({ message, user }) => {
       {content && (
         <Typography
           style={{
-            color: "white",
+            color: !samesender ? "white" : "",
           }}
         >
           {content}
@@ -60,9 +60,13 @@ const MessageComponenet = ({ message, user }) => {
           );
         })}
 
-      <Typography style={{
-        color: "#B0BEC5",
-      }} variant="caption" color={"text.secondary"}>
+      <Typography
+        style={{
+          color: "#B0BEC5",
+        }}
+        variant="caption"
+        color={"text.secondary"}
+      >
         {timeAgo}
       </Typography>
     </div>

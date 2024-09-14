@@ -5,11 +5,9 @@ export const getOtherMember = (members, userId) => {
 };
 
 export const getSockets = (users = []) => {
-  const sockets = users.map((user) => {
-    userSocketIDs.get(user._id.toString());
+  const sockets = users.map((user) => userSocketIDs.get(user.toString()));
 
-    return sockets;
-  });
+  return sockets;
 };
 
 export const getBase64 = (file) =>

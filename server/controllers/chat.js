@@ -9,7 +9,11 @@ import { TryCatch } from "../middlewares/error.js";
 import { Chat } from "../models/chat.js";
 import { Message } from "../models/message.js";
 import { User } from "../models/user.js";
-import { deleteFilesFromCloudinary, emitEvent } from "../utils/features.js";
+import {
+  deleteFilesFromCloudinary,
+  emitEvent,
+  uploadFilesToCloudinary,
+} from "../utils/features.js";
 import { ErrorHandler } from "../utils/utility.js";
 
 // Create a new group chat
@@ -93,7 +97,7 @@ const sendAttachments = TryCatch(async (req, res, next) => {
 
   // Upload files here
 
-  const attachments = [];
+  const attachments = await uploadFilesToCloudinary(files);
 
   const messageForRealTime = {
     content: "",

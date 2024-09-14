@@ -13,7 +13,7 @@ import { setIsMobileMenu } from "../../redux/reducers/misc";
 import { useErrors } from "../../hooks/hook";
 import { GetSocket } from "../../socket";
 
-const AppLayout = () => (WrappedComponent) => {
+const AppLayout = () => (WrappedComponent) => { 
   return (props) => {
     const params = useParams();
     const chatId = params.chatId;
@@ -87,7 +87,7 @@ const AppLayout = () => (WrappedComponent) => {
               borderLeft: "1px solid rgba(0, 0, 0, 0.9)", // Thin left border
             }}
           >
-            <WrappedComponent {...props} />
+            <WrappedComponent {...props} chatId={chatId} user={user} />
           </Grid>
 
           <Grid
