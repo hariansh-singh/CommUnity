@@ -40,6 +40,8 @@ const io = new Server(server, {
   cors: corsOptions,
 });
 
+app.set("io", io);
+
 // Using middlewares here
 app.use(express.json());
 app.use(cookieParser());
@@ -88,7 +90,7 @@ io.on("connection", (socket) => {
     };
 
     const membersSocket = getSockets(members);
-    
+
     io.to(membersSocket).emit(NEW_MESSAGE, {
       chatId,
       message: messageForRealTime,

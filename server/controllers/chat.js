@@ -1,8 +1,8 @@
 import {
   ALERT,
-  NEW_ATTACHMENT,
+  NEW_MESSAGE,
   NEW_MESSAGE_ALERT,
-  REFETCH_CHATS,
+  REFETCH_CHATS
 } from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
 import { TryCatch } from "../middlewares/error.js";
@@ -118,7 +118,7 @@ const sendAttachments = TryCatch(async (req, res, next) => {
 
   const message = await Message.create(messageForDB);
 
-  emitEvent(req, NEW_ATTACHMENT, chat.members, {
+  emitEvent(req, NEW_MESSAGE, chat.members, {
     message: messageForRealTime,
     chatId,
   });
@@ -250,7 +250,7 @@ const deleteChat = TryCatch(async (req, res, next) => {
   const public_ids = [];
 
   messagesWithAttachments.forEach(({ attachments }) => {
-    attachmentattachments.forEach(({ public_id }) =>
+    attachments.forEach(({ public_id }) =>
       public_ids.push(public_id)
     );
   });
@@ -433,5 +433,6 @@ export {
   newGroupChat,
   removeMember,
   renameGroup,
-  sendAttachments,
+  sendAttachments
 };
+

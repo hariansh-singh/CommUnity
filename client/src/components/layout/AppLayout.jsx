@@ -1,19 +1,20 @@
+import { Drawer, Skeleton } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { sampleChats } from "../../constants/sampleData";
+import { useErrors, useSocketEvents } from "../../hooks/hook";
+import { useMyChatsQuery } from "../../redux/api/api";
+import { setIsMobileMenu } from "../../redux/reducers/misc";
+import { GetSocket } from "../../socket";
 import Title from "../shared/Title";
 import ChatList from "../specific/ChatList";
 import Profile from "../specific/Profile";
 import Header from "./Header";
-import { useMyChatsQuery } from "../../redux/api/api";
-import { Drawer, Skeleton } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { setIsMobileMenu } from "../../redux/reducers/misc";
-import { useErrors } from "../../hooks/hook";
-import { GetSocket } from "../../socket";
+import { NEW_MESSAGE_ALERT, NEW_REQUEST } from "../../constants/events";
+import { incrementNotificationCount } from "../../redux/reducers/chat";
 
-const AppLayout = () => (WrappedComponent) => { 
+const AppLayout = () => (WrappedComponent) => {
   return (props) => {
     const params = useParams();
     const chatId = params.chatId;
@@ -26,7 +27,7 @@ const AppLayout = () => (WrappedComponent) => {
 
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery("");
 
-    useErrors([{isError, error}])
+    useErrors([{ isError, error }]);
 
     const handleDeleteChat = (e, _id, groupChat) => {
       e.preventDefault();
@@ -35,7 +36,20 @@ const AppLayout = () => (WrappedComponent) => {
 
     const handleMobileClose = () => dispatch(setIsMobileMenu(false));
 
-    return (  
+    const newMessageAlertHandler = useCallback(() => {}, []);
+
+    const newRequestHandler = useCallback(() => {
+      dispatch(incrementNotificationCount());
+    }, [dispatch]);
+
+    const eventHandler = {
+      [NEW_MESSAGE_ALERT]: newMessageAlertHandler,
+      [NEW_REQUEST]: newRequestHandler,
+    };
+
+    useSocketEvents(socket, eventHandler);
+
+    return (
       <>
         <Title />
         <Header />

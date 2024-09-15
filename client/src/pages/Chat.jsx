@@ -64,7 +64,18 @@ function Chat({ chatId, user }) {
     setMessage("");
   };
 
+  useEffect(() => {
+    return () => {
+      setMessages([]);
+      setMessage("");
+      setOldMessages([]);
+      setPage(1);
+    };
+  }, [chatId]);
+
   const newMessageHandler = useCallback((data) => {
+    if (data.chatId !== chatId) return;
+
     setMessages((prev) => [...prev, data.message]);
   }, []);
 

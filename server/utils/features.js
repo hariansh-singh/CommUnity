@@ -2,9 +2,9 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { v4 as uuid } from "uuid";
 import { v2 as cloudinary } from "cloudinary";
-import { getBase64 } from "../lib/helper.js";
+import { getBase64, getSockets } from "../lib/helper.js";
 
-// Cookie options for the token cookie 
+// Cookie options for the token cookie
 const cookieOptions = {
   maxAge: 15 * 24 * 60 * 60 * 1000,
   sameSite: "none",
@@ -39,7 +39,10 @@ const sendToken = (res, user, code, message) => {
 
 // Emit an event to the client
 const emitEvent = (req, event, users, data) => {
-  console.log("Emitting event", event);
+  const io = req.app.get("io");
+  const userSockets = getSockets(users);
+
+  io.to(userSockets).emit(event, data);
 };
 
 // Upload files to cloudinary

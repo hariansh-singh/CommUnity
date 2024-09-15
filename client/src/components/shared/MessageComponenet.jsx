@@ -32,7 +32,7 @@ const MessageComponenet = ({ message, user }) => {
       {content && (
         <Typography
           style={{
-            color: !samesender ? "white" : "",
+            color: !samesender ? "white" : "black",
           }}
         >
           {content}

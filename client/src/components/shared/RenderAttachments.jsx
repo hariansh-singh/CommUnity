@@ -5,7 +5,7 @@ import { FileOpen } from "@mui/icons-material";
 const RenderAttachments = (file, url) => {
   switch (file) {
     case "video":
-      return <video src={url} preload="none" width={"200px"} control />;
+      return <video src={url} preload="none" width={"200px"} controls />;
 
     case "image":
       return (
@@ -21,7 +21,7 @@ const RenderAttachments = (file, url) => {
       );
 
     case "audio":
-      return <audio src={url} preload="none" control />;
+      return <audio src={url} preload="none" controls />;
 
     default:
       return <FileOpen />;
