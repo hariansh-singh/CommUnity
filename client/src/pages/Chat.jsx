@@ -10,13 +10,14 @@ import AppLayout from "../components/layout/AppLayout";
 import MessageComponenet from "../components/shared/MessageComponenet";
 import { InputBox } from "../components/styles/StyledComponents";
 import { grayColor, orange } from "../constants/color";
-import { NEW_MESSAGE } from "../constants/events";
+import { NEW_MESSAGE, START_TYPING, STOP_TYPING } from "../constants/events";
 import { useErrors, useSocketEvents } from "../hooks/hook";
 import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
 import { GetSocket } from "../socket";
 import { useInfiniteScrollTop } from "6pp";
 import { useDispatch } from "react-redux";
 import { setIsFileMenu } from "../redux/reducers/misc";
+import { removeNewMessagesAlert } from "../redux/reducers/chat";
 
 function Chat({ chatId, user }) {
   const containerRef = useRef(null);
@@ -25,6 +26,10 @@ function Chat({ chatId, user }) {
   const [messages, setMessages] = useState([]);
   const [page, setPage] = useState(1);
   const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
+
+  const [IamTyping, setIamTyping] = useState(false);
+  const [userTyping, setUserTyping] = useState(false);
+  const typingTimeout = useRef(null);
 
   const socket = GetSocket();
   const dispatch = useDispatch();
@@ -45,9 +50,23 @@ function Chat({ chatId, user }) {
     { isError: oldMessagesChunk.isError, error: oldMessagesChunk.error },
   ];
 
-  console.log(oldMessages);
+  // console.log(oldMessages);
 
   const members = chatDetails?.data?.chat?.members;
+
+  const messageOnChange = (e) => {
+    setMessage(e.target.value);
+
+    if (!IamTyping) {
+      socket.emit(START_TYPING, { members, chatId });
+      setIamTyping(true);
+    }
+
+    typingTimeout.current = setTimeout(() => {
+      socket.emit(STOP_TYPING, {members, chatId})
+      setIamTyping(false);
+    }, [2000]);
+  };
 
   const handleFileOpen = (e) => {
     dispatch(setIsFileMenu(true));
@@ -65,6 +84,8 @@ function Chat({ chatId, user }) {
   };
 
   useEffect(() => {
+    dispatch(removeNewMessagesAlert(chatId));
+
     return () => {
       setMessages([]);
       setMessage("");
@@ -73,13 +94,38 @@ function Chat({ chatId, user }) {
     };
   }, [chatId]);
 
-  const newMessageHandler = useCallback((data) => {
-    if (data.chatId !== chatId) return;
+  const newMessageListener = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
 
-    setMessages((prev) => [...prev, data.message]);
-  }, []);
+      setMessages((prev) => [...prev, data.message]);
+    },
+    [chatId]
+  );
 
-  const eventHandler = { [NEW_MESSAGE]: newMessageHandler };
+  const startTypingListener = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
+
+      console.log("start typing", data);
+    },
+    [chatId]
+  );
+
+  const stopTypingListener = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
+
+      console.log("stop typing", data);
+    },
+    [chatId]
+  );
+
+  const eventHandler = {
+    [NEW_MESSAGE]: newMessageListener,
+    [START_TYPING]: startTypingListener,
+    [STOP_TYPING]: stopTypingListener,
+  };
 
   useSocketEvents(socket, eventHandler);
   useErrors(errors);
@@ -155,7 +201,7 @@ function Chat({ chatId, user }) {
           <InputBox
             placeholder="Type Message Here..."
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={messageOnChange}
             sx={{
               color: "white",
               marginLeft: "3rem",

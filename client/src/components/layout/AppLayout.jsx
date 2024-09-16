@@ -1,6 +1,6 @@
 import { Drawer, Skeleton } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useErrors, useSocketEvents } from "../../hooks/hook";
@@ -12,7 +12,11 @@ import ChatList from "../specific/ChatList";
 import Profile from "../specific/Profile";
 import Header from "./Header";
 import { NEW_MESSAGE_ALERT, NEW_REQUEST } from "../../constants/events";
-import { incrementNotificationCount } from "../../redux/reducers/chat";
+import {
+  incrementNotificationCount,
+  setNewMessagesAlert,
+} from "../../redux/reducers/chat";
+import { getOrSaveFromLocalStorage } from "../../lib/features";
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
@@ -24,10 +28,18 @@ const AppLayout = () => (WrappedComponent) => {
 
     const { isMobileMenu } = useSelector((state) => state.misc);
     const { user } = useSelector((state) => state.auth);
+    const { newMessagesAlert } = useSelector((state) => state.chat);
 
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery("");
 
     useErrors([{ isError, error }]);
+
+    useEffect(() => {
+      getOrSaveFromLocalStorage({
+        key: NEW_MESSAGE_ALERT,
+        value: newMessagesAlert,
+      });
+    }, [newMessagesAlert]);
 
     const handleDeleteChat = (e, _id, groupChat) => {
       e.preventDefault();
@@ -36,7 +48,13 @@ const AppLayout = () => (WrappedComponent) => {
 
     const handleMobileClose = () => dispatch(setIsMobileMenu(false));
 
-    const newMessageAlertHandler = useCallback(() => {}, []);
+    const newMessageAlertHandler = useCallback(
+      (data) => {
+        if (data.chatId === chatId) return;
+        dispatch(setNewMessagesAlert(data));
+      },
+      [chatId]
+    );
 
     const newRequestHandler = useCallback(() => {
       dispatch(incrementNotificationCount());
@@ -63,6 +81,7 @@ const AppLayout = () => (WrappedComponent) => {
               chats={data?.chats}
               chatId={chatId}
               handleDeleteChat={handleDeleteChat}
+              newMessagesAlert={newMessagesAlert}
             />
           </Drawer>
         )}
@@ -86,6 +105,7 @@ const AppLayout = () => (WrappedComponent) => {
                 chats={data?.chats}
                 chatId={chatId}
                 handleDeleteChat={handleDeleteChat}
+                newMessagesAlert={newMessagesAlert}
               />
             )}
           </Grid>
