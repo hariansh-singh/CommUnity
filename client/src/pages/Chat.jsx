@@ -10,7 +10,12 @@ import AppLayout from "../components/layout/AppLayout";
 import MessageComponenet from "../components/shared/MessageComponenet";
 import { InputBox } from "../components/styles/StyledComponents";
 import { grayColor, orange } from "../constants/color";
-import { NEW_MESSAGE, START_TYPING, STOP_TYPING } from "../constants/events";
+import {
+  // NEW_MESSAGE_ALERT,
+  NEW_MESSAGE,
+  START_TYPING,
+  STOP_TYPING,
+} from "../constants/events";
 import { useErrors, useSocketEvents } from "../hooks/hook";
 import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
 import { GetSocket } from "../socket";
@@ -18,14 +23,19 @@ import { useInfiniteScrollTop } from "6pp";
 import { useDispatch } from "react-redux";
 import { setIsFileMenu } from "../redux/reducers/misc";
 import { removeNewMessagesAlert } from "../redux/reducers/chat";
+import { TypingLoader } from "../components/layout/Loaders";
 
 function Chat({ chatId, user }) {
   const containerRef = useRef(null);
+  const bottomRef = useRef(null);
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [page, setPage] = useState(1);
   const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
+
+ const [showDialog, setShowDialog] = useState[false]   // state for showing dialog
+
 
   const [IamTyping, setIamTyping] = useState(false);
   const [userTyping, setUserTyping] = useState(false);
@@ -62,8 +72,10 @@ function Chat({ chatId, user }) {
       setIamTyping(true);
     }
 
+    if (typingTimeout.current) clearTimeout(typingTimeout.current);
+
     typingTimeout.current = setTimeout(() => {
-      socket.emit(STOP_TYPING, {members, chatId})
+      socket.emit(STOP_TYPING, { members, chatId });
       setIamTyping(false);
     }, [2000]);
   };
@@ -73,9 +85,15 @@ function Chat({ chatId, user }) {
     setFileMenuAnchor(e.currentTarget);
   };
 
+  const handleDialogConfirm = () => {
+    setShowDialog(false);
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
     if (!message.trim()) return;
+
+    setShowDialog(true); /////
 
     // Emit the new message event
     socket.emit(NEW_MESSAGE, { chatId, members, message });
@@ -83,6 +101,7 @@ function Chat({ chatId, user }) {
     setMessage("");
   };
 
+  // Remove the new messages alert when the chat component is unmounted
   useEffect(() => {
     dispatch(removeNewMessagesAlert(chatId));
 
@@ -93,6 +112,13 @@ function Chat({ chatId, user }) {
       setPage(1);
     };
   }, [chatId]);
+
+  // Scroll to the bottom of the chat container
+  useEffect(() => {
+    if (bottomRef.current)
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+  }),
+    [messages];
 
   const newMessageListener = useCallback(
     (data) => {
@@ -107,7 +133,7 @@ function Chat({ chatId, user }) {
     (data) => {
       if (data.chatId !== chatId) return;
 
-      console.log("start typing", data);
+      setUserTyping(true);
     },
     [chatId]
   );
@@ -116,12 +142,30 @@ function Chat({ chatId, user }) {
     (data) => {
       if (data.chatId !== chatId) return;
 
-      console.log("stop typing", data);
+      setUserTyping(false);
+    },
+    [chatId]
+  );
+
+  const alertListener = useCallback(
+    (data) => {
+      const messageForAlert = {
+        content: data,
+        sender: {
+          _id: "evbjervbirbvhreibjdb",
+          name: "admin",
+        },
+        chat: chatId,
+        createdAt: new Date().toISOString(),
+      };
+
+      setMessages((prev) => [...prev, messageForAlert]);
     },
     [chatId]
   );
 
   const eventHandler = {
+   
     [NEW_MESSAGE]: newMessageListener,
     [START_TYPING]: startTypingListener,
     [STOP_TYPING]: stopTypingListener,
@@ -171,6 +215,10 @@ function Chat({ chatId, user }) {
         {allMessages.map((i) => (
           <MessageComponenet key={i._id} message={i} user={user} />
         ))}
+
+        {userTyping && <TypingLoader />}
+
+        <div ref={bottomRef} />
       </Stack>
 
       <form
@@ -229,6 +277,23 @@ function Chat({ chatId, user }) {
           </IconButton>
         </Stack>
       </form>
+
+      <Dialog open={showDialog} onClose={handleDialogClose}>
+        <DialogTitle>Confirm Message</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to send this message?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose}>
+            No
+          </Button>
+          <Button onClick={handleDialogConfirm}>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <FileMenu anchorE1={fileMenuAnchor} chatId={chatId} />
     </>

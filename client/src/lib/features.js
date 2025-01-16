@@ -21,11 +21,22 @@ const fileFormat = (url = "") => {
   return "file";
 };
 
-const transformImage = (url = "", width = 100) => {
-  const newUrl = url.replace("upload", `upload/dpr_auto/w_${width}/`);
+// const transformImage = (url = "", width = 100) => {
+//   const newUrl = url.replace("upload", `upload/dpr_auto/w_${width}/`);
 
+//   return newUrl;
+// };
+
+const transformImage = (url = "", width = 100) => {
+  if (typeof url !== "string") {  // <--- Added type check for `url`
+    console.error("Invalid URL provided, expected a string.");  // <--- Added console error logging
+    return url;  // <--- Return the original value or handle it accordingly
+  }
+
+  const newUrl = url.replace("upload", `upload/dpr_auto/w_${width}/`);
   return newUrl;
 };
+
 
 const getOrSaveFromLocalStorage = ({ key, value, get }) => {
   if (get)

@@ -1,7 +1,7 @@
 import { Grid, Skeleton, Stack } from "@mui/material";
 import React from "react";
 
-export const LayoutLoader = () => {
+const LayoutLoader = () => {
   return (
     <Grid container height={"calc(100vh - 4rem)"} spacing={"1rem"}>
       <Grid
@@ -45,3 +45,47 @@ export const LayoutLoader = () => {
     </Grid>
   );
 };
+
+const TypingLoader = () => {
+  return (
+    <span style={{ color: "white" }}>
+      Typing
+      <span
+        style={{
+          animation: "dot-blink 1.5s infinite step-start",
+          animationDelay: "0s",
+          opacity: "0",
+        }}
+      >
+        .
+      </span>
+      <span
+        style={{
+          animation: "dot-blink 1.5s infinite step-start",
+          animationDelay: "0.2s",
+          opacity: "0",
+        }}
+      >
+        .
+      </span>
+      <span
+        style={{
+          animation: "dot-blink 1.5s infinite step-start",
+          animationDelay: "0.4s",
+          opacity: "0",
+        }}
+      >
+        .
+      </span>
+      <style>{`
+          @keyframes dot-blink {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+          }
+        `}</style>
+    </span>
+  );
+};
+
+export { LayoutLoader, TypingLoader };

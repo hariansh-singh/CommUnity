@@ -82,6 +82,15 @@ const api = createApi({
         credentials: "include",
       }),
     }),
+
+    myGroups: builder.query({
+      query: () => ({
+        url: "chat/my/groups",
+        credentials: "include",
+      }),
+      providesTags: ["Chat"],
+    }),
+
   }),
 });
 
